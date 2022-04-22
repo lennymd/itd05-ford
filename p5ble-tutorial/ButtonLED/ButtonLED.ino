@@ -29,9 +29,9 @@ ChainableLED leds(7,8,NUM_LEDS);
 BLEService ledService("cee3e619-9134-407e-8110-9b3b17babab8"); // create service
 
 // create switch characteristic and allow remote device to read and write
-BLEByteCharacteristic ledCharacteristic("19b10010-e8f2-537e-4f6c-d104768a1221", BLERead | BLEWrite);
+//BLEByteCharacteristic ledCharacteristic("cee3e619-9134-407e-8110-9b3b17babab9", BLERead | BLEWrite);
 // create button characteristic and allow remote device to get notifications
-BLEByteCharacteristic happyButtonCharacteristic("19b10010-e8f2-537e-4f6c-d104768a1242", BLERead | BLENotify);
+BLEByteCharacteristic happyButtonCharacteristic("cee3e619-9134-407e-8110-9b3b17babab8", BLERead | BLEWrite | BLENotify);
 
 void setup() {
   Serial.begin(9600);
@@ -53,14 +53,14 @@ void setup() {
   BLE.setAdvertisedService(ledService);
 
   // add the characteristics to the service
-  ledService.addCharacteristic(ledCharacteristic);
+//  ledService.addCharacteristic(ledCharacteristic);
   ledService.addCharacteristic(happyButtonCharacteristic);
 
   // add the service
   BLE.addService(ledService);
 
-  ledCharacteristic.writeValue(0);
-  happyButtonCharacteristic.writeValue(0);
+//  ledCharacteristic.writeValue(1);
+//  happyButtonCharacteristic.writeValue(0);
 
   // start advertising
   BLE.advertise();
@@ -73,24 +73,24 @@ void loop() {
   BLE.poll();
 
   // read the current button pin state
-  char buttonValue = digitalRead(buttonPin);
+//  char buttonValue = digitalRead(buttonPin);
+// has the value changed since the last read
+//  bool buttonChanged = (happyButtonCharacteristic.value() != buttonValue);
 
-  // has the value changed since the last read
-  bool buttonChanged = (happyButtonCharacteristic.value() != buttonValue);
+//  if (buttonChanged) {
+//    // button state changed, update characteristics
+////    ledCharacteristic.writeValue(buttonValue);
+//    happyButtonCharacteristic.writeValue(buttonValue);
+//  }
 
-  if (buttonChanged) {
-    // button state changed, update characteristics
-    ledCharacteristic.writeValue(buttonValue);
-    happyButtonCharacteristic.writeValue(buttonValue);
-  }
-
-  if (ledCharacteristic.written() || buttonChanged || happyButtonCharacteristic.written()) {
+//ledCharacteristic.written() || buttonChanged || 
+  if (happyButtonCharacteristic.written()) {
     // update LED, either central has written to characteristic or button state has changed
     if (happyButtonCharacteristic.value() == 1) {
-      leds.setColorRGB(1,0,255,0);
+      leds.setColorRGB(0,0,255,0);
       Serial.println("LED on");
     } else {
-      leds.setColorRGB(1,0,0,0);
+      leds.setColorRGB(0,0,0,0);
       Serial.println("LED off");
     }
 //    if (ledCharacteristic.value()) {
