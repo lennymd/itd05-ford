@@ -14,7 +14,7 @@ bool on;
 
 ChainableLED leds(2, 3, NUMLed);
 
-BLEService controlService("19B10010-E8F2-537E-4F6C-D104768A1214"); // create service
+BLEService controlService("19b10010-e8f2-537e-4f6c-d104768a1221"); // create service
 
 // create switch characteristic and allow remote device to read and write
 BLEByteCharacteristic remoteButtonCharacteristic("19B10011-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
