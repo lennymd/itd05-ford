@@ -16,24 +16,28 @@
 
   This example code is in the public domain.
 */
-
+#include <ChainableLED.h>
 #include <ArduinoBLE.h>
 
 const int ledPin = LED_BUILTIN; // set ledPin to on-board LED
 const int buttonPin = 4; // set buttonPin to digital pin 4
 
-BLEService ledService("19b10010-e8f2-537e-4f6c-d104768a1221"); // create service
+#define NUM_LEDS 1
+  
+ChainableLED leds(7,8,NUM_LEDS);
+
+BLEService ledService("cee3e619-9134-407e-8110-9b3b17babab8"); // create service
 
 // create switch characteristic and allow remote device to read and write
 BLEByteCharacteristic ledCharacteristic("19b10010-e8f2-537e-4f6c-d104768a1221", BLERead | BLEWrite);
 // create button characteristic and allow remote device to get notifications
-BLEByteCharacteristic buttonCharacteristic("19b10010-e8f2-537e-4f6c-d104768a1221", BLERead | BLENotify);
+BLEByteCharacteristic happyButtonCharacteristic("19b10010-e8f2-537e-4f6c-d104768a1242", BLERead | BLENotify);
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
-
-  pinMode(ledPin, OUTPUT); // use the LED as an output
+//  while (!Serial);
+  leds.setColorRGB(1,0,0,0);
+  pinMode(7, OUTPUT); // use the LED as an output
   pinMode(buttonPin, INPUT); // use button pin as an input
 
   // begin initialization
@@ -44,19 +48,19 @@ void setup() {
   }
 
   // set the local name peripheral advertises
-  BLE.setLocalName("ButtonLED");
+  BLE.setLocalName("Dash BUDDY");
   // set the UUID for the service this peripheral advertises:
   BLE.setAdvertisedService(ledService);
 
   // add the characteristics to the service
   ledService.addCharacteristic(ledCharacteristic);
-  ledService.addCharacteristic(buttonCharacteristic);
+  ledService.addCharacteristic(happyButtonCharacteristic);
 
   // add the service
   BLE.addService(ledService);
 
   ledCharacteristic.writeValue(0);
-  buttonCharacteristic.writeValue(0);
+  happyButtonCharacteristic.writeValue(0);
 
   // start advertising
   BLE.advertise();
@@ -72,22 +76,29 @@ void loop() {
   char buttonValue = digitalRead(buttonPin);
 
   // has the value changed since the last read
-  bool buttonChanged = (buttonCharacteristic.value() != buttonValue);
+  bool buttonChanged = (happyButtonCharacteristic.value() != buttonValue);
 
   if (buttonChanged) {
     // button state changed, update characteristics
     ledCharacteristic.writeValue(buttonValue);
-    buttonCharacteristic.writeValue(buttonValue);
+    happyButtonCharacteristic.writeValue(buttonValue);
   }
 
-  if (ledCharacteristic.written() || buttonChanged) {
+  if (ledCharacteristic.written() || buttonChanged || happyButtonCharacteristic.written()) {
     // update LED, either central has written to characteristic or button state has changed
-    if (ledCharacteristic.value()) {
+    if (happyButtonCharacteristic.value() == 1) {
+      leds.setColorRGB(1,0,255,0);
       Serial.println("LED on");
-      digitalWrite(ledPin, HIGH);
     } else {
+      leds.setColorRGB(1,0,0,0);
       Serial.println("LED off");
-      digitalWrite(ledPin, LOW);
     }
+//    if (ledCharacteristic.value()) {
+//      Serial.println("LED on");
+//      digitalWrite(ledPin, HIGH);
+//    } else {
+//      Serial.println("LED off");
+//      digitalWrite(ledPin, LOW);
+//    }
   }
 }
