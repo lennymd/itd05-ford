@@ -1,8 +1,7 @@
-const SERVICE_UUID = 'cee3e619-9134-407e-8110-9b3b17babab8';
-// const CHARACTERISTICS_UUID = {
-//   led: 'cee3e619-9134-407e-8110-9b3b17babab9',
-//   button: 'cee3e619-9134-407e-8110-9b3b17babab8',
-// };
+const SERVICE_UUID = 'c753bd47-a46f-4811-b360-a0c894550673';
+const CHARACTERISTICS_UUID = {
+  led: 'c753bd47-a46f-4811-b360-a0c894550673',
+};
 
 let ledCharacteristic;
 let ledStatus = 0;
@@ -30,7 +29,7 @@ function toggleLED() {
     ledStatus = 0;
   }
 
-  console.log(ledStatus);
+  console.log('LED Status', ledStatus);
   myBLE.write(ledCharacteristic, ledStatus);
 }
 
@@ -43,9 +42,16 @@ function connectToBle() {
 function getCharacteristics(error, characteristics) {
   if (error) console.log('error: ', error);
   console.log('characteristics: ', characteristics);
-  ledCharacteristic = characteristics[0];
+  for (let i = 0; i < characteristics.length; i++) {
+    if (characteristics[i].uuid == CHARACTERISTICS_UUID.led) {
+      ledCharacteristic = characteristics[i];
+      // myBLE.startNotifications(ledCharacteristic, handleButton);
+    } else {
+      console.log('nothing');
+    }
+  }
   // Read the value of the first characteristic
-  myBLE.read(ledCharacteristic, gotValue);
+  // myBLE.read(ledCharacteristic, gotValue);
 }
 
 // A function that will be called once got values
