@@ -1,8 +1,8 @@
 const SERVICE_UUID = 'cee3e619-9134-407e-8110-9b3b17babab8';
-const CHARACTERISTICS_UUID = {
-  led: 'cee3e619-9134-407e-8110-9b3b17babab9',
-  button: 'cee3e619-9134-407e-8110-9b3b17babab8',
-};
+// const CHARACTERISTICS_UUID = {
+//   led: 'cee3e619-9134-407e-8110-9b3b17babab9',
+//   button: 'cee3e619-9134-407e-8110-9b3b17babab8',
+// };
 
 let ledCharacteristic, happyButtonCharacteristic;
 let happyIndicator = 0;
@@ -36,10 +36,11 @@ function toggleLED() {
 
 function connectToBle() {
   // Connect to a device by passing the service UUID
-  myBLE.connect(SERVICE_UUID, gotCharacteristics);
+  myBLE.connect(SERVICE_UUID, getCharacteristics);
 }
+
 // A function that will be called once got characteristics
-function gotCharacteristics(error, characteristics) {
+function getCharacteristics(error, characteristics) {
   if (error) console.log('error: ', error);
   console.log('characteristics: ', characteristics);
   [ledCharacteristic, happyButtonCharacteristic] = characteristics;
