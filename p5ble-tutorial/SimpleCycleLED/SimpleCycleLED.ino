@@ -16,7 +16,7 @@ const int ledPin = 7;
 void setup()
 {
 //  Serial.begin(9600);
-  leds.setColorRGB(1,0,0,0);
+  leds.setColorRGB(0,0,0,0);
 
   pinMode(ledPin, OUTPUT);
   pinMode(buttonPin, INPUT); // use button pin as an input

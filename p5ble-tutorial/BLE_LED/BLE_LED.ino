@@ -53,7 +53,7 @@ void setup() {
   BLE.setAdvertisedService(ledService);
 
   // add the characteristics to the service
-//  ledService.addCharacteristic(ledCharacteristic);
+  // ledService.addCharacteristic(ledCharacteristic);
   ledService.addCharacteristic(happyButtonCharacteristic);
 
   // add the service
