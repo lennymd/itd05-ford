@@ -1,0 +1,31 @@
+body {
+  background-color: #000;
+  color: white;
+}
+button {
+  position: relative;
+  top: 50px;
+}
+#canvas {
+  position: relative;
+  top: 50px;
+  left: 0px;
+  z-index: 1;
+  height: 500px;
+  width: 500px;
+}
+
+#video {
+  position: absolute;
+  top: 100px;
+  left: 10px;
+  z-index: 0;
+  border: 3px #fff solid;
+  border-radius: 10px;
+}
+
+#angryToggle {
+  position: absolute;
+  top: 600px;
+  left: 10px;
+}
