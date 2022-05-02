@@ -36,8 +36,6 @@ function preload() {
 }
 
 function setup() {
-  // frameRate(30);
-
   canvas = createCanvas(480, 360);
   canvas.id('canvas');
 
@@ -81,6 +79,7 @@ function draw() {
   if (frameCount % 60 == 0) {
     console.log(`Angry: ${angryMode}; Happy: ${happyMode}`);
   }
+
   if (happyMode == true && angryMode == false) {
     if (pictureTaken) {
       if (frameCount % 60 == 0) {
@@ -142,17 +141,36 @@ function toggleHappyMode() {
 }
 
 // TODO delete this
-// function keyPressed() {
-//   if (keyCode === LEFT_ARROW) {
-//     angryMode = true;
-//   } else if (keyCode === RIGHT_ARROW) {
-//     angryMode = false;
-//   } else if (keyCode === UP_ARROW) {
-//     happyMode = true;
-//   } else if (keyCode === DOWN_ARROW) {
-//     happyMode = false;
-//   }
-// }
+function keyPressed() {
+  if (key === 'H' || (key === 'N') | (key === 'A')) {
+    // if the user presses Happy, Neutral, or Angry
+    serial.write(key); // send it out the serial port
+
+    // set the mode properly based on key input:
+    if (key === 'H') {
+      angryMode = false;
+      happyMode = true;
+    }
+    if (key === 'N') {
+      angryMode = false;
+      happyMode = false;
+    }
+    if (key === 'A') {
+      angryMode = true;
+      happyMode = false;
+    }
+  }
+
+  // if (keyCode === LEFT_ARROW) {
+  //   angryMode = true;
+  // } else if (keyCode === RIGHT_ARROW) {
+  //   angryMode = false;
+  // } else if (keyCode === UP_ARROW) {
+  //   happyMode = true;
+  // } else if (keyCode === DOWN_ARROW) {
+  //   happyMode = false;
+  // }
+}
 function takeSnap() {
   snapshot = video.get();
   print(snapshot);
@@ -232,7 +250,6 @@ function drawExpressions(detections, x, y, textYSpace) {
       happyIndicator = 0;
       happyKeeping = 0;
     }
-    console.log(happyIndicator);
 
     text('neutral:       ' + nf(neutral * 100, 2, 2) + '%', x, y);
     text('happiness: ' + nf(happy * 100, 2, 2) + '%', x, y + textYSpace);

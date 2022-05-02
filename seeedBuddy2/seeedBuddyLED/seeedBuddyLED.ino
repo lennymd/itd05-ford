@@ -24,7 +24,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println(incomingByte);
-
+  
   if (Serial.available() > 0) {
     // read the oldest byte in the serial buffer:
     incomingByte = Serial.read();
