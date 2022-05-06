@@ -1,7 +1,7 @@
 // VARIABLES FOR SerialPort Connection
 
 let serial;
-let portName = '/dev/tty.usbserial-110';
+let portName = '/dev/tty.usbserial-120';
 let outMessage = '1';
 let latestData;
 
@@ -11,7 +11,7 @@ let detections = [];
 
 let video, canvas;
 
-let happyIndicator = 0;
+// let happyIndicator = 0;
 let happyCount = 0;
 let happyKeeping = 0;
 
@@ -56,22 +56,22 @@ function setup() {
   video.id('video');
   video.size(width, height);
 
-  const faceOptions = {
-    withLandmarks: false,
-    withExpressions: false,
-    withDescriptors: false,
-    minConfidence: 0.5,
-  };
+  // const faceOptions = {
+  //   withLandmarks: false,
+  //   withExpressions: false,
+  //   withDescriptors: false,
+  //   minConfidence: 0.5,
+  // };
 
-  //Initialize the model
-  faceapi = ml5.faceApi(video, faceOptions, faceReady);
+  // //Initialize the model
+  // faceapi = ml5.faceApi(video, faceOptions, faceReady);
 
   // create buttons for toggling modes
-  angryButton = createButton('Toggle Angry Mode');
-  angryButton.mousePressed(toggleAngryMode);
+  // angryButton = createButton('Toggle Angry Mode');
+  // angryButton.mousePressed(toggleAngryMode);
 
-  happyButton = createButton('Toggle Happy Mode');
-  happyButton.mousePressed(toggleHappyMode);
+  // happyButton = createButton('Toggle Happy Mode');
+  // happyButton.mousePressed(toggleHappyMode);
 }
 
 function draw() {
@@ -80,32 +80,34 @@ function draw() {
   }
 
   if (happyMode == true && angryMode == false) {
-    if (pictureTaken) {
-      if (frameCount % 60 == 0) {
-        timeCounter++;
-        console.log(timeCounter);
-        if (timeCounter == 2) {
-          // turn off led
-          outMessage = 'N';
-          serial.write(outMessage);
-        }
-        if (timeCounter == 20) {
-          console.log('You can take another picture now!');
-          pictureTaken = false;
-          timeCounter = 0;
-        }
-      }
-    } else {
-      if (happyIndicator) {
-        outMessage = '3';
-        sound = random(sounds);
-        shutter.play();
-        sound.play();
-        takeSnap();
-        save(snapshot, 'myCanvas', 'jpg');
-        pictureTaken = true;
-      }
-    }
+    outMessage = '3';
+    // if (pictureTaken) {
+    //   // picture has been taken. Reset things in time.
+    //   if (frameCount % 60 == 0) {
+    //     timeCounter++;
+    //     console.log(timeCounter);
+    //     if (timeCounter == 2) {
+    //       // turn off led
+    //       outMessage = '1';
+    //       serial.write(outMessage);
+    //     }
+    //     if (timeCounter == 20) {
+    //       console.log('You can take another picture now!');
+    //       pictureTaken = false;
+    //       timeCounter = 0;
+    //     }
+    //   }
+    // } else {
+    //   // picture hasn't been taken. Take the goddamn picture
+
+    //   outMessage = '3';
+    //   sound = random(sounds);
+    //   shutter.play();
+    //   sound.play();
+    //   takeSnap();
+    //   save(snapshot, 'myCanvas', 'jpg');
+    //   pictureTaken = true;
+    // }
   }
 
   if (angryMode == true && happyMode == false) {
@@ -139,8 +141,9 @@ function toggleHappyMode() {
   }
 }
 
-// TODO delete this
+// TODO automate this
 function keyPressed() {
+  // if (key === 'h' || (key === 'n') | (key === 'a')) {
   if (key === 'h' || (key === 'n') | (key === 'a')) {
     // if the user presses Happy, Neutral, or Angry
     console.log(key);
@@ -159,6 +162,14 @@ function keyPressed() {
       angryMode = true;
       happyMode = false;
     }
+  }
+
+  if (key === 'p') {
+    sound = random(sounds);
+    shutter.play();
+    sound.play();
+    takeSnap();
+    save(snapshot, 'myCanvas', 'jpg');
   }
 
   // if (keyCode === LEFT_ARROW) {
@@ -240,14 +251,14 @@ function drawExpressions(detections, x, y, textYSpace) {
       if (happyCount > 20 && happyKeeping == 0) {
         happyCount = 0;
         happyKeeping = 1;
-        happyIndicator = 1;
+        // happyIndicator = 1;
       } else {
-        happyIndicator = 0;
+        // happyIndicator = 0;
         happyKeeping = 0;
       }
     } else {
       happyCount = 0;
-      happyIndicator = 0;
+      // happyIndicator = 0;
       happyKeeping = 0;
     }
 
