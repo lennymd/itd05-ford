@@ -1,8 +1,8 @@
 // VARIABLES FOR SerialPort Connection
 
 let serial;
-let portName = '/dev/tty.usbserial-130';
-let outMessage = 'N';
+let portName = '/dev/tty.usbserial-110';
+let outMessage = '1';
 let latestData;
 
 // VARIABLES FOR HAPPY MODE
@@ -27,12 +27,11 @@ let happyMode = false;
 let angryButton, happyButton;
 
 function preload() {
-  let a = loadSound('sounds/laugh_1.mpeg');
-  let b = loadSound('sounds/laugh_2.mpeg');
-  //let c = loadSound("sounds/laugh_3.wav");
+  let a = loadSound('sounds/laugh_1.wav');
+  let b = loadSound('sounds/laugh_2.wav');
   let c = loadSound('sounds/laugh_4.wav');
   sounds = [a, b, c];
-  shutter = loadSound('sounds/shutter.mpeg');
+  shutter = loadSound('sounds/shutter.wav');
 }
 
 function setup() {
@@ -98,9 +97,7 @@ function draw() {
       }
     } else {
       if (happyIndicator) {
-        outMessage = 'H';
-        serial.write(outMessage);
-
+        outMessage = '3';
         sound = random(sounds);
         shutter.play();
         sound.play();
@@ -113,16 +110,18 @@ function draw() {
 
   if (angryMode == true && happyMode == false) {
     // angry
-    outMessage = 'A';
-    serial.write(outMessage);
+    outMessage = '2';
   }
 
   if (angryMode == false && happyMode == false) {
     // not angry and not happy
-    outMessage = 'N';
-    serial.write(outMessage);
+    outMessage = '1';
   }
+  serial.write(outMessage);
+  console.log(outMessage);
 }
+
+// Aux functions
 function toggleAngryMode() {
   if (angryMode == true) {
     angryMode = false;
@@ -142,20 +141,21 @@ function toggleHappyMode() {
 
 // TODO delete this
 function keyPressed() {
-  if (key === 'H' || (key === 'N') | (key === 'A')) {
+  if (key === 'h' || (key === 'n') | (key === 'a')) {
     // if the user presses Happy, Neutral, or Angry
+    console.log(key);
     serial.write(key); // send it out the serial port
 
     // set the mode properly based on key input:
-    if (key === 'H') {
+    if (key === 'h') {
       angryMode = false;
       happyMode = true;
     }
-    if (key === 'N') {
+    if (key === 'n') {
       angryMode = false;
       happyMode = false;
     }
-    if (key === 'A') {
+    if (key === 'a') {
       angryMode = true;
       happyMode = false;
     }
