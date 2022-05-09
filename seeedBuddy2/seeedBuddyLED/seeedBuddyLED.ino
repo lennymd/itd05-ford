@@ -17,7 +17,7 @@ void setup() {
 
   // 2 is calibrated as neutral servo state. This is happy state.
   buddyServo.write(2);
-  leds.setColorRGB(1,0,0,255);
+  leds.setColorRGB(0,0,0,255);
   leds.setColorRGB(0,0,0,0);
 
 
@@ -34,19 +34,19 @@ void loop() {
     if (incomingByte == '1') {
       // neutral state. Set LED to 0. And Neutral position for servo
       buddyServo.write(2);
-      leds.setColorRGB(1, 0,0,0);
+      leds.setColorRGB(0, 0,0,0);
     }
 
     if (incomingByte == '2'){
       // angry state. Set LED to 255,0,0. Rotate to position angry (180)
       buddyServo.write(180);
-      leds.setColorRGB(1,255,0,0);      
+      leds.setColorRGB(0,255,0,0);      
     }
 
     if (incomingByte == '3'){
       // happy state. SET LEd to 0,255,0. Make sure position is happy (2)
       buddyServo.write(2);
-      leds.setColorRGB(1,0,255,0);
+      leds.setColorRGB(0,0,255,0);
     }
   }
 

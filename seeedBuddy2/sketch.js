@@ -1,7 +1,7 @@
 // VARIABLES FOR SerialPort Connection
 
 let serial;
-let portName = '/dev/tty.usbserial-120';
+let portName = '/dev/tty.usbserial-130';
 let outMessage = '1';
 let latestData;
 
