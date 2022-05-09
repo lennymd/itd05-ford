@@ -26,7 +26,7 @@ function setup() {
 
 function draw() {
   // put drawing code here
-  if (frameCount % 60 == 0) {
+  if (frameCount % 24 == 0) {
     // every second, update the animation
     for (i = 0; i < numberPixels; i++) {
       if (i == mainPixel) {
