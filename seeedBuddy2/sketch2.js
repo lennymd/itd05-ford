@@ -1,3 +1,4 @@
+// TODO arrange Happy Mode to be changed by smiling presence.
 // Variables for Serial Port Connection
 
 let serial;
@@ -16,7 +17,7 @@ let happyCount = 0;
 let passengerHappy = false;
 
 let pictureTaken = false;
-let timeCounter = 0;
+let pictureResetCounter = 0;
 
 let sound, shutter, shutter_delay;
 let soundA, soundB, soundC;
@@ -25,7 +26,7 @@ let sounds = [];
 // Variables for program logic
 let angryMode = false;
 let happyMode = false;
-
+let myFrameRate = 60;
 let angryButton, happyButton;
 
 // preload sounds
@@ -83,57 +84,53 @@ function draw() {
   //check modes to see how the Buddy should act.
   if (happyMode == true && angryMode == false) {
     // Buddy is acting in happy mode.
-    console.log(happyCount);
-    // TODO take a picture of the user.
-    // TODO after picture, set a timer for the buddy to relax
-    // TODO send message to arduino to do happy actions.
+    if (happyCount > 30) {
+      // user has been happy for an arbitrary period.
+
+      if (pictureTaken == false) {
+        // take a picture. Add one of the random sounds and the shutter sound
+        outMessage = 3;
+        sound = random(sounds);
+        shutter.play();
+        sound.play();
+        takeSnap();
+        save(snapshot, 'dashBuddy_imgHappy', 'jpg');
+        pictureTaken = true;
+        happyCount = 0;
+      } else {
+        // picture has been taken. create a timer to reset when the user can use the camera again.
+        // every 60 frames, increase the reset counter.
+        if (frameCount % myFrameRate == 0) {
+          pictureResetCounter++;
+        }
+
+        // two seconds (120 frames) after taking the picture, send the buddy back to neutral mode.
+        if (pictureResetCounter == 2) {
+          outMessage = 1;
+        }
+
+        // after 20 seconds, you can take a picture again
+        if (pictureResetCounter == 20) {
+          pictureTaken = false;
+          pictureResetCounter = 0;
+        }
+      }
+    }
   }
   if (happyMode == false && angryMode == true) {
     // Buddy is acting in angry mode
-    // TODO send message to arduino to do angry actions
+    // send message to arduino to do angry actions
+    outMessage = 2;
   }
 
   if (angryMode == false && happyMode == false) {
     // Buddy is neutral
-    // TODO send message to arduino to be in neutral state.
+    // send message to arduino to be in neutral state.
+    outMessage = 1;
   }
 
   // TODO check if outMessage has changed from last frame. If no change, don't send it to the arduino.
 
-  // if (happyMode == true && angryMode == false) {
-  //   outMessage = 3;
-  //   // if (pictureTaken) {
-  //   //   // picture has been taken. Reset things in time.
-  //   //   if (frameCount % 60 == 0) {
-  //   //     timeCounter++;
-  //   //     console.log(timeCounter);
-  //   //     if (timeCounter == 2) {
-  //   //       // turn off led
-  //   //       outMessage = '1';
-  //   //       serial.write(outMessage);
-  //   //     }
-  //   //     if (timeCounter == 20) {
-  //   //       console.log('You can take another picture now!');
-  //   //       pictureTaken = false;
-  //   //       timeCounter = 0;
-  //   //     }
-  //   //   }
-  //   // } else {
-  //   //   // picture hasn't been taken. Take the goddamn picture
-
-  //   //   outMessage = '3';
-  //   //   sound = random(sounds);
-  //   //   shutter.play();
-  //   //   sound.play();
-  //   //   takeSnap();
-  //   //   save(snapshot, 'myCanvas', 'jpg');
-  //   //   pictureTaken = true;
-  //   // }
-  // }
-  if (angryMode == false && happyMode == false) {
-    // not angry and not happy
-    outMessage = 1;
-  }
   // serial.write(outMessage.toString());
 }
 
@@ -160,11 +157,11 @@ function keyPressed() {
   }
 
   if (key === 'p') {
-    sound = random(sounds);
-    shutter.play();
-    sound.play();
-    takeSnap();
-    save(snapshot, 'myCanvas', 'jpg');
+    // sound = random(sounds);
+    // shutter.play();
+    // sound.play();
+    // takeSnap();
+    // save(snapshot, 'dashBuddy-img', 'jpg');
   }
 
   // if (keyCode === LEFT_ARROW) {
@@ -243,15 +240,8 @@ function drawExpressions(detections, x, y, textYSpace) {
 
     if (nf(happy) > 0.6) {
       happyCount++;
-      // if (happyCount > 30 && passengerHappy == false) {
-      //   happyCount = 0;
-      //   passengerHappy = true;
-      // } else {
-      //   passengerHappy = false;
-      // }
     } else {
       happyCount = 0;
-      // passengerHappy = false;
     }
 
     text('neutral: ' + nf(neutral * 100, 2, 2) + '%', x, y);
