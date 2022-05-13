@@ -4,7 +4,6 @@
 let serial;
 let portName = '/dev/tty.usbserial-110';
 let outMessage = 1;
-let prevOutMessage;
 let latestData;
 
 // Variables for Facemesh Code
@@ -74,14 +73,14 @@ function setup() {
 }
 
 function draw() {
-  prevOutMessage = outMessage;
-  // every 60 frames (1 second), let us know what the current message to the arduino is and the status of the angry and happy modes.
+  let _out = outMessage;
+  // every 60 frames (1 second), let us know what the status of the angry and happy modes.
   if (frameCount % 60 == 0) {
-    console.log(`outMessage: ${outMessage}`);
     console.log(`Angry: ${angryMode}; Happy: ${happyMode}`);
   }
 
   //check modes to see how the Buddy should act.
+  // TODO happy mode should be based on the counter.
   if (happyMode == true && angryMode == false) {
     // Buddy is acting in happy mode.
     if (happyCount > 30) {
@@ -109,8 +108,8 @@ function draw() {
           outMessage = 1;
         }
 
-        // after 20 seconds, you can take a picture again
-        if (pictureResetCounter == 20) {
+        // after some seconds, reset picture taking parameters.
+        if (pictureResetCounter == 10) {
           pictureTaken = false;
           pictureResetCounter = 0;
         }
@@ -129,9 +128,13 @@ function draw() {
     outMessage = 1;
   }
 
-  // TODO check if outMessage has changed from last frame. If no change, don't send it to the arduino.
-
-  // serial.write(outMessage.toString());
+  // Check if outMessage has changed from last frame. If no change, don't send it to the arduino.
+  if (_out != outMessage) {
+    console.log(`There's a new outMessage: ${outMessage}`);
+    // serial.write(outMessage.toString());
+  } else {
+    console.log('No change in outMessage');
+  }
 }
 
 // TODO automate this
