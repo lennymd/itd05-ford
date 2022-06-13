@@ -1,26 +1,36 @@
+// TODO add picture in happy mode
+// TODO exchange emotion_state to/from arduino
+// TODO change to video
 let faceapi;
 let detections = [];
 
 let video;
 let canvas;
 
+// happy_Indicator tells us we've reached a good amount of happy
 let happy_Indicator = 0;
+// happy_count counts how many frames the person has been smiling
 let happy_count = 0;
+// happy_keeping tells us we've reached good amount of happy. Does the same as happy_Indicator tbh
 let happy_keeping = 0;
-let happy_keeping_2 = 0;
 
-let pictureTaken = false;
-let timecount = 0;
+// happy_timer counts down from an arbitrary number to transition between happy and neutral faces while in happy mode.
+let happy_timer = 0;
 
-let emotion = 0;
+// picture_taken is a variable to keep track whether we took a picture of the person's happiness
+let picture_taken = false;
+
+// time_count is used to count down to when we can take a picture again.
+let time_count = 0;
+
+// this is our emotion state that we're working in. It's changed by the keyboard input. We have 3 emotionStates right now: 1 === neutral, 2 === happy, 3 === angry;
+let emotion_state = 0;
+
+// This lets us transition between the happy and neutral faces inside of happy ode
 let happy = false;
-// 0 === neutral, 1 === happy, 2 === angry;
 
 function preload() {
   img_bg = loadImage('image/bg.jpg');
-  //img_frame = loadImage('image/frame.png');
-  //img_mirror = loadImage('image/mirror.png');
-  //img_mirrorBg = loadImage('image/bg_mirror.jpg');
   img_neutral = loadImage('image/Neutral.png');
   img_happy = loadImage('image/Happy.png');
 }
@@ -125,7 +135,7 @@ function drawExpressions(detections, x, y, textYSpace) {
       if (happy_count > 15 && happy_keeping == 0) {
         happy_count = 0;
         happy_keeping = 1;
-        happy_keeping_2 = 10;
+        happy_timer = 10;
         happy_Indicator = 1;
       } else {
         happy_Indicator = 0;
@@ -159,11 +169,11 @@ function drawExpressions(detections, x, y, textYSpace) {
 
 function keyPressed() {
   if (keyCode === 78) {
-    emotion = 0;
+    emotion_state = 1;
   } else if (keyCode === 72) {
-    emotion = 1;
+    emotion_state = 2;
   } else if (keyCode === 65) {
-    emotion = 2;
+    emotion_state = 3;
   }
 }
 
@@ -172,17 +182,17 @@ function draw() {
   if (happy == true) {
     mirror_buddy = image(img_happy, 0, 0, 120, 60);
   }
-  if (emotion == 1) {
+  if (emotion_state == 2) {
     //HAPPY CODE
-    if (pictureTaken) {
+    if (picture_taken) {
       if (frameCount % 60 == 0) {
-        timecount++;
-        happy_keeping_2 = happy_keeping_2 - 1;
-        //console.log(timecount);
-        console.log(happy_keeping_2);
-        if (timecount >= 5 && happy_keeping_2 < 5) {
-          pictureTaken = false;
-          timecount = 0;
+        time_count++;
+        happy_timer = happy_timer - 1;
+        //console.log(time_count);
+        console.log(happy_timer);
+        if (time_count >= 5 && happy_timer < 5) {
+          picture_taken = false;
+          time_count = 0;
           console.log("I'm neutral now");
           happy = false;
         }
@@ -191,14 +201,14 @@ function draw() {
       if (happy_Indicator) {
         console.log("I'm happy now");
         happy = true;
-        pictureTaken = true;
-        happy_keeping_2 = 10;
+        picture_taken = true;
+        happy_timer = 10;
       }
     }
-  } else if (emotion == 2) {
+  } else if (emotion_state == 3) {
     //ANGRY CODE
     mirror_buddy = image(mirror_vid_angry, 0, 0, 120, 60);
-  } else if (emotion == 0) {
+  } else if (emotion_state == 1) {
     //NEUTRAL CODE
     mirror_buddy = image(mirror_vid_neutral, 0, 0, 120, 60);
   }
