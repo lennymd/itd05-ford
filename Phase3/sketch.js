@@ -170,10 +170,13 @@ function drawExpressions(detections, x, y, textYSpace) {
 function keyPressed() {
   if (keyCode === 78) {
     emotion_state = 1;
+    alert("Going Neutral");
   } else if (keyCode === 72) {
     emotion_state = 2;
+    alert("Going Happy");
   } else if (keyCode === 65) {
     emotion_state = 3;
+    alert("Going Angry");
   }
 }
 
