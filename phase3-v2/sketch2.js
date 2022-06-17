@@ -34,19 +34,20 @@ function preload() {
 
 function setup() {
   // TODO fix this shit
-  // canvas = createCanvas(200, 60);
+  canvas = createCanvas(200, 60);
   canvas.id('canvas');
-  //canvas.hide();
+  canvas.hide();
 
   //Buddy facial expression videos
-  mirror_vid_neutral = createVideo('video/NeutralAnimation.mov');
-  mirror_vid_neutral.loop();
+  // mirror_vid_neutral = createVideo('video/NeutralAnimation.mov');
+  // mirror_vid_neutral.loop();
 
-  mirror_vid_angry = createVideo('video/AngrySustained.mov');
-  mirror_vid_angry.loop();
+  // mirror_vid_angry = createVideo('video/AngrySustained.mov');
+  // mirror_vid_angry.loop();
   //mirror_vid.id("buddy");
 
-  //video = createVideo('video/bg.mov');// Create the video:
+  //video = createVideo('video/bg.mov');
+  // capture incoming video for facemesh work.
   video = createCapture(VIDEO);
   video.hide();
   video.id('video');
@@ -60,7 +61,7 @@ function setup() {
     minConfidence: 0.5,
   };
 
-  //Initialize the model: モデルの初期化
+  //Initialize the model
   faceapi = ml5.faceApi(video, faceOptions, faceReady);
 }
 
@@ -78,9 +79,10 @@ function draw() {
   // Check emotion_mode to see what state we're in
   if (emotion_mode === 1) {
     // neutral
-    console.log(happy_count, happy_count > 15);
+    // console.log(happy_count, happy_count > 15);
   } else if (emotion_mode === 2) {
     // happy
+    // If the user is happy enough we should take a picture of their happiness. Once we make that picture, we start a timer for when we can make another picture. If the user stops being as happy, we also time down
   } else if (emotion_mode === 3) {
     // angry
   } else {
@@ -89,7 +91,7 @@ function draw() {
   }
 }
 
-function takesnap() {
+function makeSnapshot() {
   snapshot = video.get();
   print(snapshot);
 }
