@@ -12,11 +12,19 @@ let emotional_state = 1;
 // VARIABLES -- Facemesh
 // -------------------
 
+// These variables are used to control the face mesh and I'm not changing any of them. Just declared them more compactly compared to how we have used the code before.
 let faceapi, video, canvas;
 let detections = [];
 
+// -------------------
+// VARIABLES -- Happiness
+// -------------------
+
 // happy_count is used to count how many frames the person is happy. This is always counting, but we only care about the count when we're in happy mode.
 let happy_count = 0;
+
+// We'll use a boolean to check if a picture has been taken recently. We don't want to take too many pictures.
+let picture_taken = false;
 
 // -------------------
 // VARIABLES -- serialport
@@ -111,6 +119,7 @@ function getFaces(error, result) {
   faceapi.detect(getFaces); // Call the function again at here:
 }
 
+// I modified the drawExpressions to just be about recognizing Happiness.
 function recognizeHappiness(detections) {
   if (detections.length > 0) {
     //If at least 1 face is detected
