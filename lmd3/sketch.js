@@ -12,7 +12,9 @@ let emotional_state = 1;
 // -------------------
 
 // These variables are used to control the face mesh and I'm not changing any of them. Just declared them more compactly compared to how we have used the code before.
-let faceapi, video, canvas;
+let faceapi;
+let video;
+let canvas;
 let detections = [];
 
 // -------------------
@@ -50,9 +52,9 @@ function setup() {
 
   video = createCapture(VIDEO);
   video.hide();
-  video.id('video');
-  video.size(1600, 1200);
-  video.play();
+  // video.id('video');
+  // video.size(1600, 1200);
+  // video.play();
 
   const faceOptions = {
     withLandmarks: true,
@@ -61,7 +63,8 @@ function setup() {
     minConfidence: 0.5,
   };
 
-  //Serial
+  // Facemesh
+  // TODO turn on when we're ready for it.
   faceapi = ml5.faceApi(video, faceOptions, faceReady);
 }
 
@@ -89,6 +92,7 @@ function draw() {
   } else if (emotional_state == 2) {
     // happy
     // TODO switch the buddy's face to happy
+    setBuddyVideo(2);
     // make a picture of the person if the conditions are right.
     if (happy_count > 10) {
       // The person is sufficently happy. Check if a picture has been taken. If not, take a picture and start the corresponding timer.
@@ -124,12 +128,14 @@ function draw() {
           picture_timer = 0;
           console.log("I'm neutral now");
           // TODO switch the buddy's face to neutral
+          setBuddyVideo(1);
         }
       }
     }
   } else if (emotional_state == 3) {
     // angry
     // TODO switch the buddy's face to angry
+    setBuddyVideo(3);
   }
 }
 
@@ -150,6 +156,14 @@ function keyPressed() {
 
 function setBuddyVideo(_emotional_state) {
   // TODO change the video feed based on the _emotional_state given.
+  const videos = ['neutral', 'happy', 'angry'];
+  const _path = './assets/video/';
+  const path = _path + videos[_emotional_state - 1] + '.mp4';
+  console.log(path);
+  let buddy_video = document.getElementById('buddy_video');
+  buddy_video.setAttribute('src', path);
+  // buddy_video.play();
+  console.log(buddy_video);
 }
 
 // -------------------

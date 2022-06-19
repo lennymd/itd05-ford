@@ -9,16 +9,21 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <video
-      src="./assets/video/bg.mov"
-      id="video_bg"
-      autoplay=""
-      loop=""
-    ></video>
-    <img src="image/frame.png" id="frame" />
-    <img src="image/mirror.png" id="mirror" />
-    <img src="image/bg_mirror.jpg" id="bg_mirror" />
+    <!-- The container for the displays -->
+    <main>
+      <video
+        src="./assets/video/bg.mp4"
+        id="background_video"
+        autoplay
+        loop
+      ></video>
+      <img src="./assets/image/frame.png" id="carframe" />
+      <img src="./assets/image/mirror.png" id="mirror_frame" />
+      <img src="./assets/image/bg_mirror.jpg" id="mirror_video" />
+      <video src="./assets/video/happy.mp4" id="buddy_video"></video>
+    </main>
 
+    <!-- All the code stuff -->
     <script src="./../p5.js"></script>
     <script src="./../addons/p5.sound.js"></script>
     <script src="./../addons/ml5.min.js"></script>
