@@ -1,4 +1,4 @@
-#canvas {
+/* #canvas {
   position: absolute;
   top: 170px;
   left: 860px;
@@ -10,7 +10,7 @@
   top: 0;
   left: 0;
   z-index: 0;
-}
+} */
 
 main {
   position: relative;

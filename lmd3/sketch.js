@@ -1,5 +1,3 @@
-// TODO add in code to change the video feed based on the emotion states
-
 // -------------------
 // VARIABLES -- System control
 // -------------------
@@ -12,9 +10,7 @@ let emotional_state = 1;
 // -------------------
 
 // These variables are used to control the face mesh and I'm not changing any of them. Just declared them more compactly compared to how we have used the code before.
-let faceapi;
-let video;
-let canvas;
+let faceapi, video, canvas;
 let detections = [];
 
 // -------------------
@@ -24,7 +20,6 @@ let detections = [];
 // happy_count is used to count how many frames the person is happy. This is always counting, but we only care about the count when we're in happy mode.
 let happy_count = 0;
 
-// TODO figure out how to explain this variable
 // While in happy mode for the exhibition, if the person stops smiling for too long, the buddy's face will go back to neutral once this gets below 5.
 let happy_maintained_counter = 10;
 
@@ -37,14 +32,35 @@ let picture_timer = 10;
 // -------------------
 // VARIABLES -- serialport
 // -------------------
-// TODO add serialport to communicate with arduino
+// We use the serial variable for the library.
+let serial;
 
-// We'll use out_message as a holder for the code we'll send to the arduino.
+// This changes based on when we connect to the arduino. Keep an eye and update it when you start the P5 app.
+let port_name = '/dev/tty.usbserial-110';
+
+// We'll use out_message to store the number we'll send to the arduino.
 let out_message = 1;
+
+// We'll use in_message to store the incoming message from the arduino.
+let in_message = 0;
 
 // We'll use setup() to do all the basic loading of things
 function setup() {
   // put setup code here
+
+  // TODO uncomment this section when we test with arduino
+  // Set up serial connection
+  serial = new p5.SerialPort();
+  // serial.list();
+  // serial.open(port_name);
+
+  // // some extra functions to help us out.
+  // serial.on('connected', serverConnected);
+  // serial.on('list', gotList);
+  // serial.on('data', gotData);
+  // serial.on('error', gotError);
+  // serial.on('open', gotOpen);
+  // serial.on('close', gotClose);
 
   // set up the facemesh code
   canvas = createCanvas(200, 60);
@@ -64,7 +80,6 @@ function setup() {
   };
 
   // Facemesh
-  // TODO turn on when we're ready for it.
   faceapi = ml5.faceApi(video, faceOptions, faceReady);
 }
 
@@ -78,10 +93,12 @@ function draw() {
 
   // Check if the outgoing message has changed. If it has, send it to the arduino.
   if (previous_message != out_message) {
-    // TODO send out_message to Arduino
+    // send out_message to Arduino
+    // Uncomment this section when we test with arduino
     console.log(
       `Outgoing message has changed from ${previous_message} to ${out_message}.`
     );
+    // serial.write(out_message.toString());
   }
 
   // Check the emotional state. Run code based on the state
@@ -207,4 +224,41 @@ function recognizeHappiness(detections) {
     //If no faces is detected
     happy_count = 0;
   }
+}
+
+// -------------------
+// Serialport Functions
+// -------------------
+// This section of code is about the serialport. The functions came from the serialport library.
+function serverConnected() {
+  print('Connected to Server');
+}
+
+function gotList(thelist) {
+  print('List of Serial Ports:');
+
+  for (let i = 0; i < thelist.length; i++) {
+    print(i + ' ' + thelist[i]);
+  }
+}
+
+function gotOpen() {
+  print('Serial Port is Open');
+}
+
+function gotClose() {
+  print('Serial Port is Closed');
+  latestData = 'Serial Port is Closed';
+}
+
+function gotError(theerror) {
+  print(theerror);
+}
+
+function gotData() {
+  let currentString = serial.readLine();
+  trim(currentString);
+  if (!currentString) return;
+  console.log(currentString);
+  in_message = currentString;
 }
