@@ -85,16 +85,16 @@ function draw() {
   }
 
   // Check the emotional state. Run code based on the state
-  // ? If we use a function to set the video when we're doing the face, it could be less code here in every frame.
   if (emotional_state == 1) {
     // neutral
-    // TODO switch the buddy's face to neutral
+    // switch the buddy's face to neutral
+    // TODO use the next line once we have the videos.
+    // setBuddyVideo(1);
   } else if (emotional_state == 2) {
     // happy
-    // TODO switch the buddy's face to happy
-    setBuddyVideo(2);
     // make a picture of the person if the conditions are right.
     if (happy_count > 10) {
+      setBuddyVideo(2);
       // The person is sufficently happy. Check if a picture has been taken. If not, take a picture and start the corresponding timer.
       // NB: !picture_taken is a boolean that is true if a picture has not been taken. It returns the opposite of whatever !picture_taken is.
       if (!picture_taken) {
@@ -134,13 +134,12 @@ function draw() {
     }
   } else if (emotional_state == 3) {
     // angry
-    // TODO switch the buddy's face to angry
+    // switch the buddy's face to angry
     setBuddyVideo(3);
   }
 }
 
 // Let's use keyboard to switch between the states.
-// TODO I wonder if we can add the video changes to the keyPressed code... so it's not so looped.
 function keyPressed() {
   if (keyCode === 78) {
     //neutral, pressed key 'n'
@@ -155,10 +154,10 @@ function keyPressed() {
 }
 
 function setBuddyVideo(_emotional_state) {
-  // TODO change the video feed based on the _emotional_state given.
+  // Change the video feed based on the _emotional_state given.
   const videos = ['neutral', 'happy', 'angry'];
   const _path = './assets/video/';
-  const path = _path + videos[_emotional_state - 1] + '.mp4';
+  const path = _path + videos[_emotional_state - 1] + '.mov';
   console.log(path);
   let buddy_video = document.getElementById('buddy_video');
   buddy_video.setAttribute('src', path);

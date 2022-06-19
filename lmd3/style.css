@@ -28,16 +28,16 @@ video {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 10;
-  /* TODO remove this when done with video */
-  opacity: 0;
+  z-index: 0;
 }
 
 #car_frame {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 20;
+  z-index: 100;
+  width: 1920px;
+  height: 1080px;
 }
 #mirror_frame {
   position: absolute;
@@ -59,9 +59,9 @@ video {
 
 #buddy_video {
   position: absolute;
-  width: 200px;
+  width: 180px;
   height: 60px;
-  left: 300px;
-  top: 300px;
-  z-index: 10000;
+  left: 43%;
+  top: 9%;
+  z-index: 100;
 }
