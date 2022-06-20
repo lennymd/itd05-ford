@@ -50,7 +50,6 @@ let in_message = 0;
 function setup() {
   // put setup code here
 
-  // TODO uncomment this section when we test with arduino
   // Set up serial connection
   serial = new p5.SerialPort();
   serial.list();
@@ -123,7 +122,7 @@ function draw() {
 
         // Take a snapshot from the video and save it.
         let snapshot = video.get();
-        print(snapshot);
+        // print(snapshot);
         save(snapshot, 'happy_moment', 'jpg');
 
         // Next time around, we won't go in this loop.

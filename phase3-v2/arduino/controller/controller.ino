@@ -18,16 +18,14 @@ int posR = 0;
 void setup() {
   Serial.begin(9600);
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
   // set up Servo to work. they should be plugged into D2,D3,D4 from Left (steering wheel) to right (empty vacuum).
-  //  servoL.attach(2);
-  //  servoC.attach(3);
-  //  servoR.attach(4);
-  //
-  //  servoL.write(0);
-  //  servoC.write(0);
-  //  servoR.write(0);
+    servoL.attach(2);
+    servoC.attach(3);
+    servoR.attach(4);
+  
+    servoL.write(0);
+    servoC.write(0);
+    servoR.write(0);
 
 }
 
